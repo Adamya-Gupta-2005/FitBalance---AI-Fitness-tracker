@@ -1,0 +1,118 @@
+.goal-container{
+    height: 70vh;
+    margin: 50px;
+    letter-spacing: 0.5px;
+}
+
+.goal-card{
+    width: 100%;
+    font-size: 0.85rem;
+}
+
+.sep-container {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 5px;
+    margin-bottom: 40px;
+}
+.seperator{
+    width: 150px;
+    height: 5px;
+    border-radius: 25px;
+    background-color: rgb(67, 67, 67);
+}
+.active{
+    background-color: #633cb7;
+}
+
+h2{
+    font-size: 1.5rem;
+}
+p{
+    color: rgb(142, 142, 142);
+    margin-top: 20px;
+    margin-bottom: 5px;
+    margin-left: 8px;
+}
+
+.txtInp{
+    font-size: 0.9rem;
+    padding: 15px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    background-color:rgb(78, 78, 78); 
+    color: whitesmoke;  
+}
+
+
+
+.slider-box{
+    display: flex;
+    flex-direction: column;
+    width: 55vw;
+    margin-top: 30px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: 10px;
+    width: 300px;
+    height: 8px;
+    background: #633cb7;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+
+.goal-options {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    gap:10px;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: rgb(78, 78, 78);
+    height: 40px;
+    border-radius: 15px;
+    border: transparent;
+    font-size: 1rem;
+}
+
+.select {
+    background-color: #633cb7;
+}
+
+span {
+    color: rgb(157, 157, 157);
+}
+
+.continue{
+    position: absolute;
+    top: 90vh;
+    right: 10vw;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 13px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: #633cb7;   
+}
