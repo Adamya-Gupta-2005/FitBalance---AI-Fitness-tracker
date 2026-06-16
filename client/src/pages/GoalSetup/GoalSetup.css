@@ -1,64 +1,64 @@
-.goal-container{
+.goal-container {
     height: 70vh;
     margin: 50px;
     letter-spacing: 0.5px;
 }
 
-.goal-card{
+.goal-card {
     width: 100%;
     font-size: 0.85rem;
 }
 
-.sep-container {
+.goal-sep-container {
     margin-top: 5px;
     display: flex;
     align-items: center;
-    flex-direction: row;
     gap: 5px;
     margin-bottom: 40px;
 }
-.seperator{
+
+.goal-separator {
     width: 150px;
     height: 5px;
     border-radius: 25px;
     background-color: rgb(67, 67, 67);
 }
-.active{
+
+.goal-active {
     background-color: #633cb7;
 }
 
-h2{
+.goal-title {
     font-size: 1.5rem;
 }
-p{
+
+.goal-text {
     color: rgb(142, 142, 142);
     margin-top: 20px;
     margin-bottom: 5px;
     margin-left: 8px;
 }
 
-.txtInp{
+.goal-input {
     font-size: 0.9rem;
     padding: 15px;
     border-radius: 25px;
     border: none;
     outline: none;
-    background-color:rgb(78, 78, 78); 
-    color: whitesmoke;  
+    background-color: rgb(78, 78, 78);
+    color: whitesmoke;
 }
 
-
-
-.slider-box{
+.goal-slider-box {
     display: flex;
     flex-direction: column;
     width: 55vw;
     margin-top: 30px;
 }
 
-.slider {
-    -webkit-appearance: none;
+.goal-slider {
     appearance: none;
+    -webkit-appearance: none;
     margin-top: 10px;
     width: 300px;
     height: 8px;
@@ -67,42 +67,43 @@ p{
     border-radius: 10px;
 }
 
-.slider::-webkit-slider-thumb {
+.goal-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-
     width: 18px;
     height: 18px;
     border-radius: 50%;
     background-color: white;
 }
 
-
 .goal-options {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     width: 25vw;
-    gap:10px;
+    gap: 10px;
     margin-bottom: 10px;
 }
 
-button {
+.goal-btn {
     background-color: rgb(78, 78, 78);
     height: 40px;
     border-radius: 15px;
-    border: transparent;
+    border: none;
     font-size: 1rem;
+    cursor: pointer;
+    text-align: left;
+    padding-left: 15px;
 }
 
-.select {
+.goal-selected {
     background-color: #633cb7;
 }
 
-span {
+.goal-label {
     color: rgb(157, 157, 157);
 }
 
-.continue{
+.goal-continue-btn {
     position: absolute;
     top: 90vh;
     right: 10vw;
@@ -114,5 +115,51 @@ span {
     border: none;
     outline: none;
     cursor: pointer;
-    background-color: #633cb7;   
+    background-color: #633cb7;
+}
+
+@media screen and (max-width: 768px) {
+    .goal-container {
+        height: auto;
+        margin: 20px;
+    }
+
+    .goal-card {
+        padding: 5px;
+    }
+
+    .goal-sep-container {
+        margin-bottom: 25px;
+    }
+
+    .goal-separator {
+        width: 80px;
+    }
+
+    .goal-slider-box {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .goal-slider {
+        width: 100%;
+    }
+
+    .goal-options {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .goal-btn {
+        height: 48px;
+        font-size: 1.05rem;
+    }
+
+    .goal-continue-btn {
+        position: absolute;
+        bottom: 20px;
+        width: 80%;
+        left: 20;
+        text-align: center;
+    }
 }

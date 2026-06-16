@@ -1,0 +1,280 @@
+.home-container {
+    margin-left: 240px;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar{
+    width: 0;
+    height: 0;
+}
+
+.title-section {
+    background-color: #633cb7;
+    border-bottom-left-radius:  30px;
+    border-bottom-right-radius:  30px;
+    padding: 30px;
+    height: 25vh;
+}
+
+
+.calorie-limit {
+    background-color: #3b393e;
+    width: 70%;
+    border-radius: 20px;
+    margin: auto;
+    position: relative;
+    top: -30px;
+    padding: 20px;
+    gap: 20px;
+}
+
+.row1 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.row2 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    font-size: 0.7rem;
+    color: #868090;
+}
+
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    appearance: none;
+}
+
+
+.progress-bar::-webkit-progress-bar {
+    background-color: rgb(70, 70, 70);
+    border-radius: 20px;
+}
+
+.progress-bar.gain::-webkit-progress-value {
+    background-color: #b73c3c;
+    border-radius: 20px;
+}
+
+.progress-bar.burn::-webkit-progress-value {
+    background-color: #4cb73c;
+    border-radius: 20px;
+}
+
+
+.icon-container {
+    padding: 5px;
+    border-radius: 10px ;
+    background-color: #633cb78c;
+    margin-right: 10px;
+}
+
+.divider {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: rgba(97, 96, 96, 0.35);
+    height: 2px;
+}
+
+.Activity-container {
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    padding-top: 0;
+    justify-content: space-evenly;
+}
+
+.Activity-time {
+    background-color: #3b393e;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    width: 50%;
+    margin: 0 10px;
+    
+}
+
+.label {
+    margin-bottom: 20px;
+}
+
+.activity-content {
+    font-size: 0.9rem;
+    color: #a1a1a1;
+}
+
+.activity-content-header {
+    font-size: 1.4rem;
+}
+
+.r {
+    display: flex;
+    margin: 2px;
+    justify-content: space-between;
+}
+.rowp {
+    color: #8f8f8f;
+    font-size: 0.8rem;
+}
+
+.meter-scale {
+    margin-top: 5px;
+    width: 100%;
+    height: 5px;
+    border-radius: 15px;
+
+    background: linear-gradient(
+        to right,
+        #3b82f6 0%,   
+        #22c55e 35%,     
+        #eab308 70%,     
+        #ef4444 100%     
+    );
+
+    margin-bottom: 2px;
+}
+
+.meter-scale-content {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+}
+
+.meter-scale-content p {
+    color: #8f8e90;
+}
+
+.summary-divider {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: rgba(97, 96, 96, 0.35);
+    height: 2px;
+}
+
+.summary-contents {
+    font-size: 1rem;
+    color: #8f8e90;
+}
+
+.summary {
+    margin-bottom: 30px;
+}
+
+.graph-card{
+    background-color: #3b393e;
+    padding: 20px;
+    border-radius: 15px;
+    width: 60%;
+    margin: 30px auto;
+}
+
+.graph-title {
+    margin-bottom: 15px;
+}
+
+@media screen and (max-width: 768px) {
+    .home-container {
+        margin-left: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .title-section {
+        height: auto;
+        padding: 30px 15px 65px 15px;
+        text-align: center;
+    }
+
+    .title-section h1 {
+        font-size: 1.6rem;
+    }
+
+    .title-section h3 {
+        font-size: 1.1rem;
+    }
+
+    .calorie-limit,
+    .graph-card {
+        width: 90%;
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .calorie-limit {
+        top: -40px;
+    }
+
+    .row1 h3, 
+    .row1 h4 {
+        font-size: 0.95rem;
+    }
+
+    .row2 {
+        font-size: 0.65rem;
+        margin-top: 15px;
+    }
+
+    .Activity-container {
+        width: 90%;
+        flex-direction: column;
+        gap: 15px;
+        padding: 0;
+        margin: 0 auto 15px auto;
+    }
+
+    .Activity-time {
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+    }
+
+    .label {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+
+    .activity-content-header {
+        font-size: 1.2rem;
+    }
+
+    .activity-content {
+        font-size: 0.8rem;
+    }
+
+    .rowp {
+        font-size: 0.75rem;
+    }
+
+    .r h5 {
+        font-size: 0.9rem;
+    }
+
+    .meter-scale-content {
+        font-size: 0.65rem;
+    }
+
+    .summary-contents {
+        font-size: 0.85rem;
+    }
+
+    .graph-card {
+        margin: 15px auto;
+        padding: 15px 10px;
+    }
+
+    .graph-title {
+        text-align: center;
+        font-size: 1.1rem;
+    }
+}

@@ -1,0 +1,11 @@
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: 25px;
+    background-color: rgb(34, 34, 34);
+    overflow-y: auto;
+}

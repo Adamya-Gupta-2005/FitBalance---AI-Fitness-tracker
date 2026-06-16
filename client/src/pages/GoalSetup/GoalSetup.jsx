@@ -4,6 +4,13 @@ import './GoalSetup.css';
 import Header from '../../components/Header/Header';
 import { toast } from 'react-toastify';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFire,
+  faScaleBalanced,
+  faWeightScale
+} from "@fortawesome/free-solid-svg-icons";
+
 const GoalSetup = () => {
 
     const navigate = useNavigate();
@@ -66,39 +73,54 @@ const GoalSetup = () => {
                     {
                         step === 1 && (
                             <>
-                                <div className='sep-container'>
-                                    <div className='seperator active'></div>
-                                    <div className='seperator'></div>
-                                    <div className='seperator'></div>
+                                <div className='goal-sep-container'>
+                                    <div className='goal-separator goal-active'></div>
+                                    <div className='goal-separator'></div>
+                                    <div className='goal-separator'></div>
                                 </div>
-                                <h2>How Old Are You?</h2>
-                                <p>Enter your age</p>
-                                <input className='txtInp' type="text" inputMode="numeric" pattern="[0-9]*" required placeholder='Age' value={goalData.age} onChange={(e) => {
-                                    const value = e.target.value;
 
-                                    if (value === "") {
+                                <h2 className='goal-title'>How Old Are You?</h2>
+
+                                <p className='goal-text'>Enter your age</p>
+
+                                <input
+                                    className='goal-input'
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
+                                    placeholder='Age'
+                                    value={goalData.age}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+
+                                        if (value === "") {
+                                            setGoalData({
+                                                ...goalData,
+                                                age: ""
+                                            });
+                                            return;
+                                        }
+
+                                        const age = Number(value);
+
+                                        if (isNaN(age) || age < 1 || age > 85) {
+                                            toast.error("Enter a valid age (1 - 85 years)");
+                                            return;
+                                        }
+
                                         setGoalData({
                                             ...goalData,
-                                            age: ""
+                                            age: value
                                         });
-                                        return;
-                                    }
+                                    }}
+                                />
 
-                                    const age = Number(value);
-
-                                    if (isNaN(age) || age < 1 || age > 85) {
-                                        toast.error("Enter a valid Age (1 - 85)years")
-                                        return;
-                                    }
-
-                                    setGoalData({
-                                        ...goalData,
-                                        age: value
-                                    });
-
-                                }} />
-
-                                <button className='continue' onClick={() => setStep(2)}>Continue</button>
+                                <button
+                                    className='goal-continue-btn'
+                                    onClick={() => setStep(2)}
+                                >
+                                    Continue
+                                </button>
                             </>
                         )
                     }
@@ -107,50 +129,61 @@ const GoalSetup = () => {
                     {
                         step === 2 && (
                             <>
-                                <div className='sep-container'>
-                                    <div className='seperator active'></div>
-                                    <div className='seperator active'></div>
-                                    <div className='seperator'></div>
+                                <div className='goal-sep-container'>
+                                    <div className='goal-separator goal-active'></div>
+                                    <div className='goal-separator goal-active'></div>
+                                    <div className='goal-separator'></div>
                                 </div>
-                                <h2>Your Measurement</h2>
-                                <p>Enter your body weight (kg)</p>
+
+                                <h2 className='goal-title'>Your Measurements</h2>
+
+                                <p className='goal-text'>Enter your body weight (kg)</p>
+
                                 <input
-                                    className='txtInp'
-                                    type="text" inputmode="numeric" pattern="[0-9]*"
+                                    className='goal-input'
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     placeholder="Weight (kg)"
                                     value={goalData.weight}
                                     onChange={(e) => {
-                                        {
-                                            const value = e.target.value;
+                                        const value = e.target.value;
 
-                                            if (value === "") {
-                                                setGoalData({
-                                                    ...goalData,
-                                                    weight: "",
-                                                });
-                                                return;
-                                            }
-
-                                            const weight = Number(value);
-
-                                            if (isNaN(weight) || weight < 1 || weight > 300) {
-                                                toast.error("Weight should be greater than 0 less than 300 kg");
-                                                return;
-                                            }
-
+                                        if (value === "") {
                                             setGoalData({
                                                 ...goalData,
-                                                weight: value,
+                                                weight: "",
                                             });
+                                            return;
                                         }
-                                    }
-                                    }
+
+                                        const weight = Number(value);
+
+                                        if (
+                                            isNaN(weight) ||
+                                            weight < 1 ||
+                                            weight > 300
+                                        ) {
+                                            toast.error(
+                                                "Weight should be between 1 and 300 kg"
+                                            );
+                                            return;
+                                        }
+
+                                        setGoalData({
+                                            ...goalData,
+                                            weight: value,
+                                        });
+                                    }}
                                 />
 
-                                <p>Enter your height (cm)</p>
+                                <p className='goal-text'>Enter your height (cm)</p>
+
                                 <input
-                                    className='txtInp'
-                                    type="text" inputmode="numeric" pattern="[0-9]*"
+                                    className='goal-input'
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     placeholder="Height (cm)"
                                     value={goalData.height}
                                     onChange={(e) => {
@@ -166,8 +199,14 @@ const GoalSetup = () => {
 
                                         const height = Number(value);
 
-                                        if (isNaN(height) || height < 1 || height > 250) {
-                                            toast.error("Height should be between 1 and 250 cm");
+                                        if (
+                                            isNaN(height) ||
+                                            height < 1 ||
+                                            height > 250
+                                        ) {
+                                            toast.error(
+                                                "Height should be between 1 and 250 cm"
+                                            );
                                             return;
                                         }
 
@@ -178,7 +217,10 @@ const GoalSetup = () => {
                                     }}
                                 />
 
-                                <button className='continue' onClick={() => setStep(3)}>
+                                <button
+                                    className='goal-continue-btn'
+                                    onClick={() => setStep(3)}
+                                >
                                     Continue
                                 </button>
                             </>
@@ -188,46 +230,59 @@ const GoalSetup = () => {
                     {/* STEP 3 */}
                     {step === 3 && (
                         <>
-                            <div className='sep-container'>
-                                <div className='seperator active'></div>
-                                <div className='seperator active'></div>
-                                <div className='seperator active'></div>
+                            <div className='goal-sep-container'>
+                                <div className='goal-separator goal-active'></div>
+                                <div className='goal-separator goal-active'></div>
+                                <div className='goal-separator goal-active'></div>
                             </div>
-                            <h2>Select Your Goal</h2>
+
+                            <h2 className='goal-title'>Select Your Goal</h2>
 
                             <div className="goal-options">
                                 <button
-                                    className={goalData.goal === "lose" ? "select" : ""}
+                                    className={
+                                        goalData.goal === "lose"
+                                            ? "goal-btn goal-selected"
+                                            : "goal-btn"
+                                    }
                                     onClick={() => selectGoal("lose")}
-                                >
+                                > <FontAwesomeIcon className='i' icon={faFire} /> 
                                     Lose Weight
                                 </button>
 
                                 <button
-                                    className={goalData.goal === "maintain" ? "select" : ""}
+                                    className={
+                                        goalData.goal === "maintain"
+                                            ? "goal-btn goal-selected"
+                                            : "goal-btn"
+                                    }
                                     onClick={() => selectGoal("maintain")}
-                                >
-                                    Maintain
+                                >   <FontAwesomeIcon className='i' icon={faScaleBalanced} />
+                                    Maintain Weight
                                 </button>
 
                                 <button
-                                    className={goalData.goal === "gain" ? "select" : ""}
+                                    className={
+                                        goalData.goal === "gain"
+                                            ? "goal-btn goal-selected"
+                                            : "goal-btn"
+                                    }
                                     onClick={() => selectGoal("gain")}
-                                >
-                                    Gain Weight
+                                >   <FontAwesomeIcon className='i' icon={faWeightScale} />
+                                    Gain Muscle
                                 </button>
-
                             </div>
 
-                            <div className="slider-box">
+                            <div className="goal-slider-box">
                                 <label>
-                                    <span>Daily Calorie Intake:</span>
-                                    {" "}
+                                    <span className="goal-label">
+                                        Daily Calorie Intake:
+                                    </span>{" "}
                                     {goalData.calorieTarget} kcal
                                 </label>
 
                                 <input
-                                    className='slider'
+                                    className="goal-slider"
                                     type="range"
                                     min="1500"
                                     max="3500"
@@ -241,15 +296,16 @@ const GoalSetup = () => {
                                 />
                             </div>
 
-                            <div className="slider-box">
+                            <div className="goal-slider-box">
                                 <label>
-                                    <span>Daily Burn Target:</span>
-                                    {" "}
+                                    <span className="goal-label">
+                                        Daily Burn Target:
+                                    </span>{" "}
                                     {goalData.burnTarget} kcal
                                 </label>
 
                                 <input
-                                    className='slider'
+                                    className="goal-slider"
                                     type="range"
                                     min="100"
                                     max="1000"
@@ -263,7 +319,10 @@ const GoalSetup = () => {
                                 />
                             </div>
 
-                            <button className='continue' onClick={handleFinish}>
+                            <button
+                                className="goal-continue-btn"
+                                onClick={handleFinish}
+                            >
                                 Start Tracking
                             </button>
                         </>
