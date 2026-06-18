@@ -99,6 +99,14 @@ hr {
     cursor: pointer;
 }
 
+.seperator-login-form {
+    height: 1.75px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    background-color: #5b5b5bb8;
+}
+
 @media screen and (max-width: 768px) {
     .auth-container {
         padding: 35px;

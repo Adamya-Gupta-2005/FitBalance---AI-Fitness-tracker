@@ -1,0 +1,160 @@
+.profile-container {
+    margin-left: 240px;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.profile-header {
+    background-color: #633cb7;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    padding: 30px;
+}
+
+.profile-log {
+    background-color: #3e3e3e;
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 15px;
+    width: 50%;
+}
+
+.profile-log-header { 
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.profile-log-container {
+    display: flex;
+    background-color: #5d5d5d;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px;
+}
+
+.inner-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-log-container p {
+    font-size: 0.8rem;
+}
+
+.edit-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background-color: #633cb7;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.edit-btn:hover {
+    opacity: 0.9;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-form label {
+    color: #cfcfcf;
+    font-size: 0.85rem;
+}
+
+.profile-input {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #5d5d5d;
+    color: white;
+    outline: none;
+}
+
+.profile-btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.cancel-btn,
+.save-btn {
+    width: 48%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #4b4b4b;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.save-btn {
+    background: #633cb7;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.logout-btn {
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background-color: #d64545;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c93636;
+}
+
+@media screen and (max-width: 768px) {
+    .profile-container {
+        margin-left: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .profile-header {
+        padding: 20px 15px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .profile-log {
+        width: 80%;
+        margin-top: 20px;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .profile-log-container {
+        margin: 8px 0;
+    }
+}

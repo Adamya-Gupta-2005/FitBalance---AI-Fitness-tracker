@@ -54,7 +54,7 @@ const Auth = () => {
                                 : "Start tracking your fitness today"}
                         </p>
                     </div>
-                    <hr />
+                    <div className="seperator-login-form"></div>
                     <form className="auth-form" onSubmit={handleSubmit}>
                         {!isLogin && (
                             <div className="form-group">
