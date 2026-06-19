@@ -1,9 +1,17 @@
 import { useState } from "react";
+
 import Header from "../../components/Header/Header";
 import '../Auth/Auth.css'
 import { toast } from 'react-toastify';
 
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 const Auth = () => {
+
+    const navigate = useNavigate()
+    const backendUrl = "http://localhost:4000"
+
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         name: "",
@@ -14,19 +22,58 @@ const Auth = () => {
 
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!isLogin) {
+        try {
+            
+             if (!isLogin) {
             if (formData.password !== formData.confirmPassword) {
                 toast.error("Password do not match");
                 return;
             }
-            toast.success("Signup validated")
-        }else {
-            toast.success("Login validated")
+            
+            const { data } = await axios.post(`${backendUrl}/api/auth/register`, {
+                username: formData.name,
+                email: formData.email,
+                password: formData.password
+            },
+            {
+                withCredentials: true
+            }
+        );
+
+        if (data.success) {
+            toast.success("Account created");
+            navigate('/goal-setup');
         }
-        console.log(formData)
+
+        }else {
+            
+            const { data } = await axios.post(`${backendUrl}/api/auth/login`, {
+                username: formData.name,
+                email: formData.email,
+                password: formData.password
+            },
+            {
+                withCredentials: true
+            }
+
+        );
+
+        if(data.success){
+            toast.success("Login Successful");
+
+            navigate('/dashboard');
+        }
+
+        }
+
+        } catch (error) {
+            
+            toast.error(error.message)
+
+        }
     }
 
     const handleChange = (e) => {

@@ -26,7 +26,7 @@ const Profile = () => {
         });
     };
 
-    const navigate = useNavigate();
+    const navigate = use;
 
     const handleLogout = () => {
 

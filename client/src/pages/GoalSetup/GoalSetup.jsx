@@ -4,6 +4,8 @@ import './GoalSetup.css';
 import Header from '../../components/Header/Header';
 import { toast } from 'react-toastify';
 
+import axios from 'axios';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFire,
@@ -54,10 +56,40 @@ const GoalSetup = () => {
         };
     }
 
-    const handleFinish = () => {
-        console.log(goalData);
+    const backendUrl = "http://localhost:4000";
 
-        navigate('/dashboard')
+    const handleFinish = async () => {
+        if(
+            !goalData.age || !goalData.weight ||
+            !goalData.height || !goalData.goal
+        ){
+            toast.error("Complete all fields");
+            return;
+        }
+
+        try {
+            
+            const { data } = await axios.put(
+                `${backendUrl}/api/user/goal-setup`,
+                {
+                    age: goalData.age,
+                    weight: goalData.weight,
+                    height: goalData.height,
+                    goal: goalData.goal
+                },
+                {
+                    withCredentials: true
+                }
+            );
+
+            if(data.success) {
+                toast.success("Profile setup complete")
+                navigate('/dashboard');
+            }
+
+        } catch (error) {
+            toast.error(error.message)
+        }
     };
 
     return (
@@ -89,6 +121,7 @@ const GoalSetup = () => {
                                     inputMode="numeric"
                                     pattern="[0-9]*"
                                     placeholder='Age'
+                                    required
                                     value={goalData.age}
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -117,7 +150,12 @@ const GoalSetup = () => {
 
                                 <button
                                     className='goal-continue-btn'
-                                    onClick={() => setStep(2)}
+                                    onClick={() => {
+                                        if(!goalData.age){
+                                            toast.error("Please enter your age.");
+                                                return;
+                                        }
+                                    setStep(2)}}
                                 >
                                     Continue
                                 </button>
@@ -145,6 +183,7 @@ const GoalSetup = () => {
                                     inputMode="numeric"
                                     pattern="[0-9]*"
                                     placeholder="Weight (kg)"
+                                    required
                                     value={goalData.weight}
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -184,6 +223,7 @@ const GoalSetup = () => {
                                     type="text"
                                     inputMode="numeric"
                                     pattern="[0-9]*"
+                                    required
                                     placeholder="Height (cm)"
                                     value={goalData.height}
                                     onChange={(e) => {
@@ -219,7 +259,12 @@ const GoalSetup = () => {
 
                                 <button
                                     className='goal-continue-btn'
-                                    onClick={() => setStep(3)}
+                                    onClick={() => {
+                                        if(!goalData.weight || !goalData.height){
+                                            toast.error("Please enter all details");
+                                                return;
+                                        }
+                                        setStep(3)}}
                                 >
                                     Continue
                                 </button>
