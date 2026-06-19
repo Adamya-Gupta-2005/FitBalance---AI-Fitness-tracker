@@ -21,7 +21,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.get("/", (req,res) => {
+app.get("/", (req,res) => {  
     res.send("API Running");
 })
 
