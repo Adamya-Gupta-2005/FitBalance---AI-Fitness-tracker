@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios'
 import './Food.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 
 const Food = () => {
 
@@ -26,12 +28,31 @@ const Food = () => {
     mealType: ""
   });
 
-  const [foodItems, setFoodItems] = useState({
-    breakfast: [],
-    lunch: [],
-    snack: [],
-    dinner: [],
-  });
+  const [foods, setFoods] = useState([])
+
+  const backendUrl = "http://localhost:4000";
+
+  useEffect(() => {
+    fetchFoods();
+  }, []);
+
+  const fetchFoods = async () => {
+    try {
+
+      const { data } = await axios.get(`${backendUrl}/api/food`,
+        {
+          withCredentials: true
+        }
+      );
+
+      if (data.success) {
+        setFoods(data.foods);
+      }
+
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const mealTypes = [
     {
@@ -63,7 +84,7 @@ const Food = () => {
     });
   };
 
-  const addFood = () => {
+  const addFood = async () => {
 
     if (
       !foodData.foodName ||
@@ -74,28 +95,35 @@ const Food = () => {
       return;
     }
 
-    const newFood = {
-      name: foodData.foodName,
-      calories: Number(foodData.calories)
-    };
+    try {
 
-    setFoodItems(prev => ({
-      ...prev,
-      [foodData.mealType]: [
-        ...prev[foodData.mealType],
-        newFood
-      ]
-    }));
+      await axios.post(`${backendUrl}/api/food`,
+        {
+          name: foodData.foodName,
+          calories: Number(foodData.calories),
+          mealType: foodData.mealType
+        },
+        {
+          withCredentials: true
+        }
+      );
 
-    setFoodData({
-      foodName: "",
-      calories: "",
-      mealType: ""
-    });
+      await fetchFoods();
 
-    toast.success("Food Added");
-    setActivePannel(null);
+      setFoodData({
+        foodName: "",
+        calories: "",
+        mealType: ""
+      });
+
+      setActivePannel(null);
+      toast.success("Food Added");
+
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
+
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -103,16 +131,22 @@ const Food = () => {
     }
   };
 
-  const deleteFood = (mealType, index) => {
 
-    setFoodItems(prev => ({
-      ...prev,
-      [mealType]: prev[mealType].filter(
-        (_, i) => i !== index
-      )
-    }));
+  const deleteFood = async (id) => {
+    try {
+      await axios.delete(`${backendUrl}/api/food/${id}`,
+        {
+          withCredentials: true
+        }
+      );
 
-    toast.success("Food Deleted");
+      fetchFoods();
+
+      toast.success("Food Deleted");
+
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -296,16 +330,19 @@ const Food = () => {
 
         {/* RIGHT SECTION */}
 
-        {Object.values(foodItems).some(
-          meal => meal.length > 0
-        ) && (
+        {foods.length > 0 && (
 
           <div className="food-log-section">
 
-            {mealTypes.map(meal => (
+            {mealTypes.map(meal => {
 
-              foodItems[meal.key].length > 0 && (
+              const mealFoods = foods.filter(
+                food => food.mealType === meal.key
+              );
 
+              if (mealFoods.length === 0) return null;
+
+              return (
                 <div
                   key={meal.key}
                   className="meal-card"
@@ -313,64 +350,50 @@ const Food = () => {
 
                   <h3>
                     <span className="icon-container">
-                      <FontAwesomeIcon
-                        icon={meal.icon}
-                      />
+                      <FontAwesomeIcon icon={meal.icon} />
                     </span>
 
                     {meal.title}
                   </h3>
 
-                  {foodItems[meal.key].map(
-                    (item, index) => (
+                  {mealFoods.map(food => (
+
+                    <div
+                      key={food._id}
+                      className="food-item"
+                    >
+
+                      <span>{food.name}</span>
 
                       <div
-                        key={index}
-                        className="food-item"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px"
+                        }}
                       >
 
                         <span>
-                          {item.name}
+                          {food.calories} kcal
                         </span>
 
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "12px"
-                          }}
+                        <button
+                          className="delete-btn"
+                          onClick={() => deleteFood(food._id)}
                         >
-
-                          <span>
-                            {item.calories} kcal
-                          </span>
-
-                          <button
-                            className="delete-btn"
-                            onClick={() =>
-                              deleteFood(
-                                meal.key,
-                                index
-                              )
-                            }
-                          >
-                            <FontAwesomeIcon
-                              icon={faTrash}
-                            />
-                          </button>
-
-                        </div>
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
 
                       </div>
 
-                    )
-                  )}
+                    </div>
+
+                  ))}
 
                 </div>
+              );
 
-              )
-
-            ))}
+            })}
 
           </div>
 

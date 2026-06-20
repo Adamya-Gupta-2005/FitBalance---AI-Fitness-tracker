@@ -23,8 +23,8 @@ const GoalSetup = () => {
         weight: "",
         height: "",
         goal: "",
-        calorieTarget: 0,
-        burnTarget: 0
+        dailyCalorieIntake: "",
+        dailyCalorieBurn: ""
     });
 
     const selectGoal = (goal) => {
@@ -32,8 +32,8 @@ const GoalSetup = () => {
             setGoalData({
                 ...goalData,
                 goal,
-                calorieTarget: 1800,
-                burnTarget: 400,
+                dailyCalorieIntake: 1800,
+                dailyCalorieBurn: 400,
             })
         }
 
@@ -41,8 +41,8 @@ const GoalSetup = () => {
             setGoalData({
                 ...goalData,
                 goal,
-                calorieTarget: 2200,
-                burnTarget: 300,
+                dailyCalorieIntake: 2200,
+                dailyCalorieBurn: 300,
             });
         }
 
@@ -50,8 +50,8 @@ const GoalSetup = () => {
             setGoalData({
                 ...goalData,
                 goal,
-                calorieTarget: 2800,
-                burnTarget: 200,
+                dailyCalorieIntake: 2800,
+                dailyCalorieBurn: 200,
             });
         };
     }
@@ -75,7 +75,9 @@ const GoalSetup = () => {
                     age: goalData.age,
                     weight: goalData.weight,
                     height: goalData.height,
-                    goal: goalData.goal
+                    goal: goalData.goal,
+                    dailyCalorieIntake: goalData.dailyCalorieIntake,
+                    dailyCalorieBurn: goalData.dailyCalorieBurn
                 },
                 {
                     withCredentials: true
@@ -323,7 +325,7 @@ const GoalSetup = () => {
                                     <span className="goal-label">
                                         Daily Calorie Intake:
                                     </span>{" "}
-                                    {goalData.calorieTarget} kcal
+                                    {goalData.dailyCalorieIntake} kcal
                                 </label>
 
                                 <input
@@ -331,11 +333,11 @@ const GoalSetup = () => {
                                     type="range"
                                     min="1500"
                                     max="3500"
-                                    value={goalData.calorieTarget}
+                                    value={goalData.dailyCalorieIntake}
                                     onChange={(e) =>
                                         setGoalData({
                                             ...goalData,
-                                            calorieTarget: Number(e.target.value),
+                                            dailyCalorieIntake: Number(e.target.value),
                                         })
                                     }
                                 />
@@ -346,7 +348,7 @@ const GoalSetup = () => {
                                     <span className="goal-label">
                                         Daily Burn Target:
                                     </span>{" "}
-                                    {goalData.burnTarget} kcal
+                                    {goalData.dailyCalorieBurn} kcal
                                 </label>
 
                                 <input
@@ -354,11 +356,11 @@ const GoalSetup = () => {
                                     type="range"
                                     min="100"
                                     max="1000"
-                                    value={goalData.burnTarget}
+                                    value={goalData.dailyCalorieBurn}
                                     onChange={(e) =>
                                         setGoalData({
                                             ...goalData,
-                                            burnTarget: Number(e.target.value),
+                                            dailyCalorieBurn: Number(e.target.value),
                                         })
                                     }
                                 />

@@ -162,8 +162,8 @@ body {
 @media screen and (max-width: 768px) {
     .food-container {
         margin-left: 0;
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .food-header {

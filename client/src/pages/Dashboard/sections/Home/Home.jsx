@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './Home.css'
+
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,6 +22,58 @@ import {
 
 const Home = () => {
 
+  const [user, setUser] = useState(null);
+  const backendUrl = "http://localhost:4000";
+
+  const [stats, setStats] = useState({
+    totalCalories: 0,
+    mealsLogged: 0
+  });
+
+   const fetchUser = async () => {
+      try {
+
+        const {data} = await axios.get(`${backendUrl}/api/user/profile`,
+        {
+          withCredentials: true
+        });
+
+        if(data.success) {
+          setUser(data.user);
+        }
+      } catch(error) {
+        toast.error(error.message);
+      }
+    };
+
+    const fetchDashboard = async () => {
+      try {
+        
+        const {data} = await axios.get(`${backendUrl}/api/food/dashboard`,
+          {
+            withCredentials: true
+          }
+        );
+
+        if(data.success){
+          setStats({
+            totalCalories: data.totalCalories,
+            mealsLogged: data.mealsLogged
+          });
+        }
+
+      } catch (error) {
+          toast.error(error.message);
+      }
+    };
+
+  useEffect(() => {
+    fetchUser();
+    fetchDashboard();
+  }, []);
+
+  const bmi = user?.weight && user?.height ? (user.weight / Math.pow(user.height / 100 , 2)).toFixed(1) : 0;
+
   const weeklyData = [
     { day: "Mon", intake: 2200, burn: 400 },
     { day: "Tue", intake: 1900, burn: 350 },
@@ -33,7 +88,7 @@ const Home = () => {
     <div className='home-container'>
       <div className='title-section'>
         <h1>Welcome</h1>
-        <h3>Hi there, Username</h3>
+        <h3>Hi there, {user?.username || "User"}</h3>
       </div>
 
       {/*limit section */}
@@ -46,11 +101,11 @@ const Home = () => {
           </div>
 
           <div className='row2'>
-            <p>0</p>
-            <p>2800</p>
+            <p>{stats.totalCalories}</p>
+            <p>{user?.dailyCalorieIntake || 2800}</p>
           </div>
 
-          <progress className='progress-bar gain' value="1120" max="2200" />
+          <progress className='progress-bar gain' value={stats.totalCalories} max={user?.dailyCalorieIntake || 2800} />
         </div>
         <div className='divider'></div>
         <div className='calorie-row'>
@@ -62,10 +117,10 @@ const Home = () => {
 
           <div className='row2'>
             <p>0</p>
-            <p>475</p>
+            <p>{user?.dailyCalorieBurn || 500}</p>
           </div>
 
-          <progress className='progress-bar burn' value="50" max="475" />
+          <progress className='progress-bar burn' value={0} max={user?.dailyCalorieBurn || 500} />
         </div>
       </div>
 
@@ -94,18 +149,18 @@ const Home = () => {
 
           <div className='r'>
             <p className='rowp'>Weight</p>
-            <p className='rowp'>78</p>
+            <p className='rowp'>{user?.weight} kg</p>
           </div>
 
           <div className='r'>
             <p className='rowp'>Height</p>
-            <p className='rowp'>175</p>
+            <p className='rowp'>{user?.height} cm</p>
           </div>
           <div className="divider"></div>
 
           <div className='r'>
             <h5>BMI</h5>
-            <h5>22.5</h5>
+            <h5>{bmi}</h5>
           </div>
 
           <div className="meter-scale"></div>
@@ -121,14 +176,14 @@ const Home = () => {
 
           <div className="r">
             <p className='summary-contents'>Meals Logged</p>
-            <p className='summary-contents'>0</p>
+            <p className='summary-contents'>{stats.mealsLogged}</p>
           </div>
 
           <div className="summary-divider"></div>
 
           <div className="r">
             <p className='summary-contents'>Total Calories</p>
-            <p className='summary-contents'>0 kcal</p>
+            <p className='summary-contents'>{stats.totalCalories} kcal</p>
           </div>
 
           <div className="summary-divider"></div>

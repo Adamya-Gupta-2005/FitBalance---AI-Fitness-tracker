@@ -1,10 +1,10 @@
 import User from '../models/userModel.js'
 
-export const goalSetup = async ( req, res ) => {
+export const goalSetup = async (req, res) => {
 
     try {
-        
-        const { age,weight,height,goal} = req.body;
+
+        const { age, weight, height, goal, dailyCalorieIntake, dailyCalorieBurn } = req.body;
 
         if (!age || !weight || !height || !goal) {
             return res.status(400).json({
@@ -15,7 +15,7 @@ export const goalSetup = async ( req, res ) => {
 
         const user = await User.findById(req.user._id);
 
-        if(!user){
+        if (!user) {
             return res.status(400).json({
                 success: false,
                 message: "User not found"
@@ -26,6 +26,10 @@ export const goalSetup = async ( req, res ) => {
         user.weight = weight;
         user.height = height;
         user.goal = goal;
+
+        user.dailyCalorieIntake = dailyCalorieIntake;
+        user.dailyCalorieBurn = dailyCalorieBurn;
+
 
         await user.save();
 
@@ -47,9 +51,9 @@ export const goalSetup = async ( req, res ) => {
 
 
 //for protected rotes
-export const aboutMe = async (req,res) => {
+export const aboutMe = async (req, res) => {
     try {
-        
+
         res.status(200).json({
             success: true,
             user: req.user
@@ -59,18 +63,18 @@ export const aboutMe = async (req,res) => {
         res.status(500).json({
             success: false,
             message: error.message
-        })        
+        })
     }
 }
 
 //----------Profile------------------------------------------------------
-export const getProfile = async (req,res) => {
+export const getProfile = async (req, res) => {
     try {
-        
+
         const user = await User.findById(req.user._id).select("-password");
 
         res.status(200).json({
-            success:true,
+            success: true,
             user
         })
 
@@ -82,15 +86,15 @@ export const getProfile = async (req,res) => {
     }
 }
 
-export const updateProfile = async (req,res) => {
+export const updateProfile = async (req, res) => {
     try {
-        
-        const {age,height,weight,goal} = req.body;
+
+        const { age, height, weight, goal } = req.body;
 
         const user = await User.findById(req.user._id);
 
         if (!user) {
-                return res.status(404).json({
+            return res.status(404).json({
                 success: false,
                 message: "User not found"
             });
@@ -110,13 +114,13 @@ export const updateProfile = async (req,res) => {
 
     } catch (error) {
         res.status(500).json({
-            success:false,
+            success: false,
             message: error.message
         });
     }
 }
 
-export const logoutUser = async (req,res) => {
+export const logoutUser = async (req, res) => {
     //deletes token 
     res.cookie("token", "", {
         expires: new Date(0),
