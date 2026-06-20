@@ -1,22 +1,27 @@
 import React, { useState } from 'react'
 import './Profile.css'
 
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faUser, faCalendarDays, faWeightScale, faArrowUpRightDots, faBullseye
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Profile = () => {
 
     const [isEditing, setIsEditing] = useState(false);
 
     const [profileData, setProfileData] = useState({
-        age: 18,
-        weight: 75,
-        height: 175,
-        goal: "Maintain Weight"
+        username: "",
+        age: "",
+        weight: "",
+        height: "",
+        goal: ""
     });
 
     const handleChange = (e) => {
@@ -26,15 +31,74 @@ const Profile = () => {
         });
     };
 
-    const navigate = use;
+    const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const backendUrl = "http://localhost:4000"
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
 
-        navigate('/')
+                const { data } = await axios.get(`${backendUrl}/api/user/me`,
+                    {
+                        withCredentials: true
+                    }
+                );
+
+                if (data.success) {
+                    setProfileData({
+                        username: data.user.username || "",
+                        age: data.user.age || "",
+                        weight: data.user.weight || "",
+                        height: data.user.height || "",
+                        goal: data.user.goal || ""
+                    });
+                }
+
+            } catch (error) {
+                toast.error(error.message)
+            }
+        }
+
+        fetchProfile();
+
+    }, []);
+
+    const handleLogout = async () => {
+
+        try {
+            await axios.post(`${backendUrl}/api/user/logout`, {}, {
+                withCredentials: true
+            }
+            );
+            navigate('/')
+        } catch (error) {
+            toast.error(error.message)
+        }
     };
+
+
+    const handleSave = async () => {
+        try {
+
+            const { data } = await axios.put(
+                `${backendUrl}/api/user/profile`,
+                profileData,
+                {
+                    withCredentials: true
+                }
+            );
+
+            if (data.success) {
+                setProfileData(data.user);
+                setIsEditing(false);
+                toast.success("Profile Updated");
+            }
+
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
 
     return (
         <div className='profile-container'>
@@ -50,7 +114,7 @@ const Profile = () => {
                     <span className='icon-container'>
                         <FontAwesomeIcon icon={faUser} />
                     </span>
-                    <h2>Your Profile</h2>
+                    <h2>{profileData.username}</h2>
                 </div>
 
                 {!isEditing ? (
@@ -93,7 +157,11 @@ const Profile = () => {
                                 </span>
                                 <h5>Goal</h5>
                             </div>
-                            <p>{profileData.goal}</p>
+                            <p>
+                                {profileData.goal === "lose" && "Lose Weight"}
+                            {profileData.goal === "maintain" && "Maintain Weight"}
+                            {profileData.goal === "gain" && "Gain Weight"}
+                            </p>
                         </div>
 
                         <button
@@ -142,14 +210,15 @@ const Profile = () => {
                             onChange={handleChange}
                             className="profile-input"
                         >
-                            <option>Lose Weight</option>
-                            <option>Maintain Weight</option>
-                            <option>Gain Weight</option>
+                            <option value="lose">Lose Weight</option>
+                            <option value="maintain">Maintain Weight</option>
+                            <option value="gain">Gain Weight</option>
                         </select>
 
                         <div className="profile-btns">
 
                             <button
+                                type='button'
                                 className="cancel-btn"
                                 onClick={() => setIsEditing(false)}
                             >
@@ -157,8 +226,9 @@ const Profile = () => {
                             </button>
 
                             <button
+                                type='button'
                                 className="save-btn"
-                                onClick={() => setIsEditing(false)}
+                                onClick={handleSave}
                             >
                                 Save
                             </button>

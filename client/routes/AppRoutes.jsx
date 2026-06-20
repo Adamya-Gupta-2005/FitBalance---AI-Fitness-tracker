@@ -10,9 +10,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={
-        <ProtectedRoute>
-          <Auth />
-        </ProtectedRoute>
+          <Auth/>
         } />
       <Route path="/goal-setup" element={
         <ProtectedRoute>

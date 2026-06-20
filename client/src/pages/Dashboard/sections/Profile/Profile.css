@@ -95,6 +95,11 @@ body {
     margin-top: 15px;
 }
 
+.profile-log-container p {
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
 .cancel-btn,
 .save-btn {
     width: 48%;

@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({children}) => {
     
-    const [isAuthenticated, setIsAutheticated] = useState(false);
+    const [isAuthenticated, setIsAutheticated] = useState(null);
     const backendUrl = "http://localhost:4000";
 
     useEffect(() => {
@@ -28,6 +28,10 @@ const ProtectedRoute = ({children}) => {
 
         checkAuth();
     }, []);
+
+    if (isAuthenticated === null) {
+        return <h2>Loading...</h2>;
+    }
 
     return isAuthenticated ? children : <Navigate to="/" />
 }
