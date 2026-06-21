@@ -15,6 +15,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const Activity = () => {
 
@@ -27,15 +29,7 @@ const Activity = () => {
     activityType: ""
   });
 
-  const [activityItems, setActivityItems] = useState({
-    walking: [],
-    running: [],
-    cycling: [],
-    gym: [],
-    sports: [],
-    yoga: [],
-    other: []
-  });
+  const [activities, setActivities] = useState([]);
 
   const activityTypes = [
     {
@@ -75,6 +69,31 @@ const Activity = () => {
     }
   ];
 
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  const backendUrl = "http://localhost:5000";
+  const fetchActivities = async () => {
+
+    try {
+
+      const { data } = await axios.get(`${backendUrl}/api/activity`,
+        {
+          withCredentials: true
+        }
+      );
+
+      if (data.success) {
+        setActivities(data.activities);
+      }
+
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+
   const handleChange = (e) => {
     setActivityData({
       ...activityData,
@@ -82,7 +101,7 @@ const Activity = () => {
     });
   };
 
-  const addActivity = () => {
+  const addActivity = async () => {
 
     if (
       !activityData.activityName ||
@@ -94,39 +113,54 @@ const Activity = () => {
       return;
     }
 
-    const newActivity = {
-      name: activityData.activityName,
-      duration: Number(activityData.duration),
-      calories: Number(activityData.caloriesBurned)
-    };
+    try {
+      await axios.post(`${backendUrl}/api/activity`, {
+        name: activityData.activityName,
+        duration: Number(activityData.duration),
+        caloriesBurned: Number(activityData.caloriesBurned),
+        activityType: activityData.activityType
+      },
+        {
+          withCredentials: true
+        })
 
-    setActivityItems(prev => ({
-      ...prev,
-      [activityData.activityType]: [
-        ...prev[activityData.activityType],
-        newActivity
-      ]
-    }));
+      fetchActivities();
 
-    setActivityData({
-      activityName: "",
-      duration: "",
-      caloriesBurned: "",
-      activityType: ""
-    });
+      setActivityData({
+        activityName: "",
+        duration: "",
+        caloriesBurned: "",
+        activityType: ""
+      });
 
-    toast.success("Activity Added");
-    setActivePanel(null);
+      setActivePanel(null);
+
+      toast.success("Activity Added");
+
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  const deleteActivity = (type, index) => {
 
-    setActivityItems(prev => ({
-      ...prev,
-      [type]: prev[type].filter((_, i) => i !== index)
-    }));
+  const deleteActivity = async (id) => {
 
-    toast.success("Activity Deleted");
+    try {
+
+      await axios.delete(
+        `${backendUrl}/api/activity/${id}`,
+        {
+          withCredentials: true
+        }
+      );
+
+      fetchActivities();
+
+      toast.success("Activity Deleted");
+
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -247,15 +281,19 @@ const Activity = () => {
 
         {/* RIGHT SECTION */}
 
-        {Object.values(activityItems).some(
-          item => item.length > 0
-        ) && (
+        {activities.length > 0 && (
 
           <div className="food-log-section">
 
-            {activityTypes.map(type => (
+            {activityTypes.map(type => {
 
-              activityItems[type.key].length > 0 && (
+              const typeActivities = activities.filter(
+                activity => activity.activityType === type.key
+              );
+
+              if (typeActivities.length === 0) return null;
+
+              return (
 
                 <div
                   className="meal-card"
@@ -266,21 +304,27 @@ const Activity = () => {
                     <span className="icon-container">
                       <FontAwesomeIcon icon={type.icon} />
                     </span>
+
                     {type.title}
                   </h3>
 
-                  {activityItems[type.key].map((item, index) => (
+                  {typeActivities.map(activity => (
 
                     <div
                       className="food-item"
-                      key={index}
+                      key={activity._id}
                     >
 
                       <div>
-                        <h4>{item.name}</h4>
+
+                        <h4>
+                          {activity.name}
+                        </h4>
+
                         <span>
-                          {item.duration} min
+                          {activity.duration} min
                         </span>
+
                       </div>
 
                       <div
@@ -292,16 +336,13 @@ const Activity = () => {
                       >
 
                         <span>
-                          {item.calories} kcal
+                          {activity.caloriesBurned} kcal
                         </span>
 
                         <button
                           className="delete-btn"
                           onClick={() =>
-                            deleteActivity(
-                              type.key,
-                              index
-                            )
+                            deleteActivity(activity._id)
                           }
                         >
                           <FontAwesomeIcon
@@ -317,9 +358,9 @@ const Activity = () => {
 
                 </div>
 
-              )
+              );
 
-            ))}
+            })}
 
           </div>
 

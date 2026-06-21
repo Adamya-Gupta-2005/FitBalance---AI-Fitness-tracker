@@ -33,7 +33,7 @@ const Profile = () => {
 
     const navigate = useNavigate();
 
-    const backendUrl = "http://localhost:4000"
+    const backendUrl = "http://localhost:5000"
 
     useEffect(() => {
         const fetchProfile = async () => {

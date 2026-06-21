@@ -13,7 +13,7 @@ const activitySchema = new mongoose.Schema(
 
         caloriesBurned: Number,
 
-        activitType: {
+        activityType: {
             type: String,
             enum: [
                 'walking','running','cycling','gym',

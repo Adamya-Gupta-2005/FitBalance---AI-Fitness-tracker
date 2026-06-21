@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoutes.js";
 import userRoutes from './routes/userRoutes.js';
 import foodRoutes from './routes/foodRoutes.js';
+import activityRoutes from './routes/activityRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 dotenv.config();
 
@@ -28,7 +30,9 @@ app.get("/", (req,res) => {
 
 app.use('/api/auth',authRouter);
 app.use('/api/user',userRoutes);
-app.use('/api/food', foodRoutes)
+app.use('/api/food', foodRoutes);
+app.use('/api/activity', activityRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on ${process.env.PORT}`);

@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const Auth = () => {
 
     const navigate = useNavigate()
-    const backendUrl = "http://localhost:4000"
+    const backendUrl = "http://localhost:5000"
 
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({

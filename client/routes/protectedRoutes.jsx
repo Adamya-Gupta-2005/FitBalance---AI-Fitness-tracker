@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 const ProtectedRoute = ({children}) => {
     
     const [isAuthenticated, setIsAutheticated] = useState(null);
-    const backendUrl = "http://localhost:4000";
+    const backendUrl = "http://localhost:5000";
 
     useEffect(() => {
         const checkAuth = async () => {

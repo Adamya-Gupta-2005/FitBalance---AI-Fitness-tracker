@@ -56,7 +56,7 @@ const GoalSetup = () => {
         };
     }
 
-    const backendUrl = "http://localhost:4000";
+    const backendUrl = "http://localhost:5000";
 
     const handleFinish = async () => {
         if(
@@ -355,7 +355,7 @@ const GoalSetup = () => {
                                     className="goal-slider"
                                     type="range"
                                     min="100"
-                                    max="1000"
+                                    max="2500"
                                     value={goalData.dailyCalorieBurn}
                                     onChange={(e) =>
                                         setGoalData({

@@ -23,66 +23,109 @@ import {
 const Home = () => {
 
   const [user, setUser] = useState(null);
-  const backendUrl = "http://localhost:4000";
+  const backendUrl = "http://localhost:5000";
 
   const [stats, setStats] = useState({
     totalCalories: 0,
     mealsLogged: 0
   });
 
-   const fetchUser = async () => {
-      try {
+  const [activityStats, setActivityStats] = useState({
+    totalBurned: 0,
+    totalMinutes: 0,
+    workoutsLogged: 0
+  });
 
-        const {data} = await axios.get(`${backendUrl}/api/user/profile`,
+  const fetchUser = async () => {
+    try {
+
+      const { data } = await axios.get(`${backendUrl}/api/user/profile`,
         {
           withCredentials: true
         });
 
-        if(data.success) {
-          setUser(data.user);
-        }
-      } catch(error) {
-        toast.error(error.message);
+      if (data.success) {
+        setUser(data.user);
       }
-    };
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
-    const fetchDashboard = async () => {
-      try {
-        
-        const {data} = await axios.get(`${backendUrl}/api/food/dashboard`,
-          {
-            withCredentials: true
-          }
-        );
+  const fetchDashboard = async () => {
+    try {
 
-        if(data.success){
-          setStats({
-            totalCalories: data.totalCalories,
-            mealsLogged: data.mealsLogged
-          });
+      const { data } = await axios.get(`${backendUrl}/api/food/dashboard`,
+        {
+          withCredentials: true
         }
+      );
 
-      } catch (error) {
-          toast.error(error.message);
+      if (data.success) {
+        setStats({
+          totalCalories: data.totalCalories,
+          mealsLogged: data.mealsLogged
+        });
       }
-    };
+
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchActivityDashboard = async () => {
+
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/activity/dashboard`,
+        {
+          withCredentials: true
+        }
+      );
+
+      if (data.success) {
+
+        setActivityStats({
+          totalBurned: data.totalBurned,
+          totalMinutes: data.totalMinutes,
+          workoutsLogged: data.workoutsLogged
+        });
+
+      }
+
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  const fetchWeeklyStats = async () => {
+
+    try {
+      const {data} = await axios.get(`${backendUrl}/api/dashboard/weekly`,
+        {
+          withCredentials: true
+        }
+      );
+
+      if(data.success) {
+        setWeeklyData(data.weeklyData);
+      }
+
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
 
   useEffect(() => {
     fetchUser();
     fetchDashboard();
+    fetchActivityDashboard();
+    fetchWeeklyStats();
   }, []);
 
-  const bmi = user?.weight && user?.height ? (user.weight / Math.pow(user.height / 100 , 2)).toFixed(1) : 0;
+  const bmi = user?.weight && user?.height ? (user.weight / Math.pow(user.height / 100, 2)).toFixed(1) : 0;
 
-  const weeklyData = [
-    { day: "Mon", intake: 2200, burn: 400 },
-    { day: "Tue", intake: 1900, burn: 350 },
-    { day: "Wed", intake: 2500, burn: 500 },
-    { day: "Thu", intake: 2100, burn: 450 },
-    { day: "Fri", intake: 2300, burn: 600 },
-    { day: "Sat", intake: 2800, burn: 700 },
-    { day: "Sun", intake: 2000, burn: 300 },
-  ];
+  const [weeklyData, setWeeklyData] = useState([]);
 
   return (
     <div className='home-container'>
@@ -116,11 +159,11 @@ const Home = () => {
           </div>
 
           <div className='row2'>
-            <p>0</p>
-            <p>{user?.dailyCalorieBurn || 500}</p>
+            <p>{activityStats.totalBurned}</p>
+            <p>{user?.dailyCalorieBurn || 2500}</p>
           </div>
 
-          <progress className='progress-bar burn' value={0} max={user?.dailyCalorieBurn || 500} />
+          <progress className='progress-bar burn' value={activityStats.totalBurned} max={user?.dailyCalorieBurn || 2500} />
         </div>
       </div>
 
@@ -130,13 +173,13 @@ const Home = () => {
 
         <div className='Activity-time'>
           <h3 className='label'><span className="icon-container"><FontAwesomeIcon icon={faStopwatch} /></span> Active</h3>
-          <p className='activity-content-header'>0</p>
+          <p className='activity-content-header'>{activityStats.totalMinutes}</p>
           <p className='activity-content'>minutes today</p>
         </div>
 
         <div className='Activity-time'>
           <h3 className='label'><span className="icon-container"><FontAwesomeIcon icon={faBicycle} /></span> Workout</h3>
-          <p className='activity-content-header'>0</p>
+          <p className='activity-content-header'>{activityStats.workoutsLogged}</p>
           <p className='activity-content'>activities logged</p>
         </div>
       </div>
@@ -190,7 +233,7 @@ const Home = () => {
 
           <div className="r">
             <p className='summary-contents'>Active Time</p>
-            <p className='summary-contents'>0 min</p>
+            <p className='summary-contents'>{activityStats.totalMinutes} min</p>
           </div>
         </div>
       </div>
@@ -201,77 +244,77 @@ const Home = () => {
         </h3>
 
         <ResponsiveContainer width="100%" height={320} >
-  <BarChart
-    data={weeklyData}
-    barGap={5}
-    margin={{
-      top: 20,
-      right: 20,
-      left: 0,
-      bottom: 10
-    }}
-  >
-    <CartesianGrid
-      stroke="#555"
-      strokeDasharray="4 4"
-      vertical={false}
-    />
+          <BarChart
+            data={weeklyData}
+            barGap={5}
+            margin={{
+              top: 20,
+              right: 20,
+              left: 0,
+              bottom: 10
+            }}
+          >
+            <CartesianGrid
+              stroke="#555"
+              strokeDasharray="4 4"
+              vertical={false}
+            />
 
-    <XAxis
-      dataKey="day"
-      stroke="#6f6f6f"
-      tickLine={false}
-      axisLine={false}
-      tick={{
-        fontSize: 12
-      }}
-    />
+            <XAxis
+              dataKey="day"
+              stroke="#6f6f6f"
+              tickLine={false}
+              axisLine={false}
+              tick={{
+                fontSize: 12
+              }}
+            />
 
-    <YAxis
-      stroke="#6f6f6f"
-      tickLine={false}
-      axisLine={false}
-      tick={{
-        fontSize: 10
-      }}
-    />
+            <YAxis
+              stroke="#6f6f6f"
+              tickLine={false}
+              axisLine={false}
+              tick={{
+                fontSize: 10
+              }}
+            />
 
-    <Tooltip
-      cursor={{
-        fill: "rgba(198, 193, 209, 0.15)"
-      }}
-      contentStyle={{
-        background: "#403f3f",
-        border: "1px solid #6f6f6f",
-        borderRadius: "12px",
-        color: "white"
-      }}
-    />
+            <Tooltip
+              cursor={{
+                fill: "rgba(198, 193, 209, 0.15)"
+              }}
+              contentStyle={{
+                background: "#403f3f",
+                border: "1px solid #6f6f6f",
+                borderRadius: "12px",
+                color: "white"
+              }}
+            />
 
-    <Legend
-      wrapperStyle={{
-        color: "#d1d1d1",
-        paddingTop: "10px"
-      }}
-    />
+            <Legend
+              wrapperStyle={{
+                color: "#d1d1d1",
+                paddingTop: "10px"
+              }}
+            />
 
-    <Bar
-      dataKey="intake"
-      name="Intake"
-      fill="#b73c3c"
-      radius={[4, 4, 0, 0]}
-      maxBarSize={40}
-    />
+            <Bar
+              dataKey="intake"
+              name="Intake"
+              fill="#b73c3c"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={40}
+            />
 
-    <Bar
-      dataKey="burn"
-      name="Burned"
-      fill="#22c55e"
-      radius={[4, 4, 0, 0]}
-      maxBarSize={40}
-    />
-  </BarChart>
-</ResponsiveContainer>
+            <Bar
+              dataKey="burn"
+              name="Burned"
+              fill="#22c55e"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={40}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
 
