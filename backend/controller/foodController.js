@@ -1,4 +1,5 @@
 import Food from "../models/foodModel.js";
+import { analyzeFoodImage } from "../servives/foodAiService.js";
 
 export const addFood = async (req, res) => {
     const { name, calories, mealType } = req.body;
@@ -64,3 +65,34 @@ export const getDashboardStats = async (req, res) => {
     })
 
 }
+
+export const analyzeFood = async (req, res) => {
+    try {
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "Image required"
+            });
+        }
+
+        console.log(req.file)
+
+        const result = await analyzeFoodImage(
+            req.file.buffer, req,file.mimetype
+        )
+
+        console.log(result)
+
+        res.status(200).json({
+            success: true,
+            food: result
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+};
