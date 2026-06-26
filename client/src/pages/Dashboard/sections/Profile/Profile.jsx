@@ -39,7 +39,7 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
 
-                const { data } = await axios.get(`${backendUrl}/api/user/me`,
+                const { data } = await axios.get(`${backendUrl}/api/user/profile`,
                     {
                         withCredentials: true
                     }
@@ -56,7 +56,10 @@ const Profile = () => {
                 }
 
             } catch (error) {
-                toast.error(error.message)
+                toast.error(
+                    error.response?.data?.message ||
+                    error.message
+                );
             }
         }
 
@@ -71,9 +74,13 @@ const Profile = () => {
                 withCredentials: true
             }
             );
-            navigate('/')
+            navigate('/');
+            toast.success("Logged Out")
         } catch (error) {
-            toast.error(error.message)
+            toast.error(
+                error.response?.data?.message ||
+                error.message
+            );
         }
     };
 
@@ -90,13 +97,22 @@ const Profile = () => {
             );
 
             if (data.success) {
-                setProfileData(data.user);
+                setProfileData({
+                    username: data.user.username,
+                    age: data.user.age,
+                    weight: data.user.weight,
+                    height: data.user.height,
+                    goal: data.user.goal
+                });
                 setIsEditing(false);
                 toast.success("Profile Updated");
             }
 
         } catch (error) {
-            toast.error(error.message);
+            toast.error(
+                error.response?.data?.message ||
+                error.message
+            );
         }
     }
 
@@ -159,8 +175,8 @@ const Profile = () => {
                             </div>
                             <p>
                                 {profileData.goal === "lose" && "Lose Weight"}
-                            {profileData.goal === "maintain" && "Maintain Weight"}
-                            {profileData.goal === "gain" && "Gain Weight"}
+                                {profileData.goal === "maintain" && "Maintain Weight"}
+                                {profileData.goal === "gain" && "Gain Weight"}
                             </p>
                         </div>
 

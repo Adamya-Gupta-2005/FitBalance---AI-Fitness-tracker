@@ -74,6 +74,7 @@ const Activity = () => {
   }, []);
 
   const backendUrl = "http://localhost:5000";
+
   const fetchActivities = async () => {
 
     try {
@@ -89,7 +90,10 @@ const Activity = () => {
       }
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+        error.response?.data?.message ||
+        error.message
+      );
     }
   };
 
@@ -124,7 +128,7 @@ const Activity = () => {
           withCredentials: true
         })
 
-      fetchActivities();
+      await fetchActivities();
 
       setActivityData({
         activityName: "",
@@ -138,7 +142,10 @@ const Activity = () => {
       toast.success("Activity Added");
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+        error.response?.data?.message ||
+        error.message
+      );
     }
   };
 
@@ -154,12 +161,15 @@ const Activity = () => {
         }
       );
 
-      fetchActivities();
+      await fetchActivities();
 
       toast.success("Activity Deleted");
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+        error.response?.data?.message ||
+        error.message
+      );
     }
   };
 

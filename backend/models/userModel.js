@@ -28,9 +28,14 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: ["lose", "maintain", "gain"]
         },
-         
+
         dailyCalorieIntake: Number,
         dailyCalorieBurn: Number,
+
+        lastWeekReset: {
+            type: Date,
+            default: Date.now
+        }
 
     },
     {

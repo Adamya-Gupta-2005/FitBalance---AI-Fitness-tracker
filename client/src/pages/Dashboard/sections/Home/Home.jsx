@@ -36,6 +36,8 @@ const Home = () => {
     workoutsLogged: 0
   });
 
+  const [weeklyData, setWeeklyData] = useState([]);
+
   const fetchUser = async () => {
     try {
 
@@ -48,7 +50,10 @@ const Home = () => {
         setUser(data.user);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+    error.response?.data?.message ||
+    error.message
+);
     }
   };
 
@@ -69,7 +74,10 @@ const Home = () => {
       }
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+    error.response?.data?.message ||
+    error.message
+);
     }
   };
 
@@ -93,7 +101,10 @@ const Home = () => {
       }
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+    error.response?.data?.message ||
+    error.message
+);
     }
   }
 
@@ -111,7 +122,10 @@ const Home = () => {
       }
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+    error.response?.data?.message ||
+    error.message
+);
     }
   };
 
@@ -124,8 +138,6 @@ const Home = () => {
   }, []);
 
   const bmi = user?.weight && user?.height ? (user.weight / Math.pow(user.height / 100, 2)).toFixed(1) : 0;
-
-  const [weeklyData, setWeeklyData] = useState([]);
 
   return (
     <div className='home-container'>

@@ -50,7 +50,10 @@ const Food = () => {
       }
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+    error.response?.data?.message ||
+    error.message
+);
     }
   };
 
@@ -99,7 +102,7 @@ const Food = () => {
 
       await axios.post(`${backendUrl}/api/food`,
         {
-          name: foodData.foodName,
+          foodName: foodData.foodName,
           calories: Number(foodData.calories),
           mealType: foodData.mealType
         },
@@ -120,7 +123,10 @@ const Food = () => {
       toast.success("Food Added");
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+    error.response?.data?.message ||
+    error.message
+);
     }
   };
 
@@ -145,9 +151,96 @@ const Food = () => {
       toast.success("Food Deleted");
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+    error.response?.data?.message ||
+    error.message
+);
     }
   };
+
+  const [analyzing,setAnalyzing]=useState(false);
+
+  const getMealType = () => {
+
+    const hour = new Date().getHours();
+
+    if(hour<11) return "breakfast";
+
+    if(hour<16) return "lunch";
+
+    if(hour<19) return "snack";
+
+    return "dinner";
+
+}
+
+  const analyzeFood = async () => {
+
+    if(!selectedFile){
+        toast.error("Select image");
+        return;
+    }
+
+    try{
+
+        setAnalyzing(true);
+
+        const formData = new FormData();
+
+        formData.append("image",selectedFile);
+
+        const {data}=await axios.post(
+            `${backendUrl}/api/food/analyze`,
+            formData,
+            {
+                withCredentials:true
+            }
+        );
+
+        if(data.success){
+
+            setFoodData({
+                foodName:data.food.foodName,
+                calories:data.food.calories,
+                mealType:getMealType()
+            });
+
+            setActivePannel("add");
+
+            toast.success("Food identified");
+
+        }
+
+    }catch(error){
+
+        toast.error(
+            error.response?.data?.message ||
+            error.message
+        );
+
+    }finally{
+
+        setAnalyzing(false);
+
+    }
+
+}
+
+  if(analyzing){
+
+    return(
+        <div className="loading-screen">
+
+            <div className="loader"></div>
+
+            <h2>Analyzing Food...</h2>
+
+            <p>AI is calculating calories</p>
+
+        </div>
+    )
+
+}
 
   return (
     <div className='food-container'>
@@ -316,6 +409,7 @@ const Food = () => {
 
                 <button
                   className="save-btn btn"
+                  onClick={analyzeFood}
                 >
                   Analyze Food
                 </button>
@@ -363,7 +457,7 @@ const Food = () => {
                       className="food-item"
                     >
 
-                      <span>{food.name}</span>
+                      <span>{food.foodName}</span>
 
                       <div
                         style={{

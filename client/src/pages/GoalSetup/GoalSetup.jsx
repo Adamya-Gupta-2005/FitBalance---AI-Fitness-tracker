@@ -8,15 +8,17 @@ import axios from 'axios';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faFire,
-  faScaleBalanced,
-  faWeightScale
+    faFire,
+    faScaleBalanced,
+    faWeightScale
 } from "@fortawesome/free-solid-svg-icons";
 
 const GoalSetup = () => {
 
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
+
+    const backendUrl = "http://localhost:5000"
 
     const [goalData, setGoalData] = useState({
         age: "",
@@ -56,41 +58,42 @@ const GoalSetup = () => {
         };
     }
 
-    const backendUrl = "http://localhost:5000";
 
     const handleFinish = async () => {
-        if(
+        if (
             !goalData.age || !goalData.weight ||
             !goalData.height || !goalData.goal
-        ){
+        ) {
             toast.error("Complete all fields");
             return;
         }
 
         try {
-            
+
             const { data } = await axios.put(
                 `${backendUrl}/api/user/goal-setup`,
                 {
-                    age: goalData.age,
-                    weight: goalData.weight,
-                    height: goalData.height,
-                    goal: goalData.goal,
-                    dailyCalorieIntake: goalData.dailyCalorieIntake,
-                    dailyCalorieBurn: goalData.dailyCalorieBurn
+                    age: Number(goalData.age),
+                    weight: Number(goalData.weight),
+                    height: Number(goalData.height),
+                    dailyCalorieIntake: Number(goalData.dailyCalorieIntake),
+                    dailyCalorieBurn: Number(goalData.dailyCalorieBurn)
                 },
                 {
                     withCredentials: true
                 }
             );
 
-            if(data.success) {
+            if (data.success) {
                 toast.success("Profile setup complete")
                 navigate('/dashboard');
             }
 
         } catch (error) {
-            toast.error(error.message)
+            toast.error(
+                error.response?.data?.message ||
+                error.message
+            );
         }
     };
 
@@ -153,11 +156,12 @@ const GoalSetup = () => {
                                 <button
                                     className='goal-continue-btn'
                                     onClick={() => {
-                                        if(!goalData.age){
+                                        if (!goalData.age) {
                                             toast.error("Please enter your age.");
-                                                return;
+                                            return;
                                         }
-                                    setStep(2)}}
+                                        setStep(2)
+                                    }}
                                 >
                                     Continue
                                 </button>
@@ -262,11 +266,12 @@ const GoalSetup = () => {
                                 <button
                                     className='goal-continue-btn'
                                     onClick={() => {
-                                        if(!goalData.weight || !goalData.height){
+                                        if (!goalData.weight || !goalData.height) {
                                             toast.error("Please enter all details");
-                                                return;
+                                            return;
                                         }
-                                        setStep(3)}}
+                                        setStep(3)
+                                    }}
                                 >
                                     Continue
                                 </button>
@@ -293,7 +298,7 @@ const GoalSetup = () => {
                                             : "goal-btn"
                                     }
                                     onClick={() => selectGoal("lose")}
-                                > <FontAwesomeIcon className='i' icon={faFire} /> 
+                                > <FontAwesomeIcon className='i' icon={faFire} />
                                     Lose Weight
                                 </button>
 

@@ -1,57 +1,43 @@
-import Food from '../models/foodModel.js'
-import Activity from '../models/activityModel.js'
+import WeeklyStats from "../models/WeeklyStats.js";
+import { resetWeekIfNeeded } from "../utils/weekReset.js";
 
 export const getWeeklyStats = async (req, res) => {
+
     try {
+
+        await resetWeekIfNeeded(req.user._id);
+
+        const order = [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ];
 
         const weeklyData = [];
 
-        for (let i = 6; i >= 0; i--) {
-            const start = new Date();
+        for (const day of order) {
 
-            start.setDate(start.getDate() - i);
-            start.setHours(0, 0, 0, 0);
-
-            const end = new Date(start);
-
-            end.setHours(23, 59, 59, 999);
-
-            const foods = await Food.find({
+            let stat = await WeeklyStats.findOne({
                 user: req.user._id,
-                createdAt: {
-                    $gte: start,
-                    $lte: end
-                }
+                day
             });
 
-            const activities = await Activity.find({
-                user: req.user._id,
-                createdAt: {
-                    $gte: start,
-                    $lte: end
-                }
-            });
+            if (!stat) {
 
-            const intake = foods.reduce(
-                (sum, food) => sum + food.calories,
-                0
-            );
+                stat = {
+                    day,
+                    intake: 0,
+                    burn: 0
+                };
 
-            const burn = activities.reduce(
-                (sum, activity) =>
-                    sum + activity.caloriesBurned,
-                0
-            );
+            }
 
-            const day = start.toLocaleDateString("en-US",
-                {
-                    weekday: "short"
-                }
-            );
+            weeklyData.push(stat);
 
-            weeklyData.push({
-                day, intake, burn
-            });
         }
 
         res.status(200).json({
@@ -60,9 +46,12 @@ export const getWeeklyStats = async (req, res) => {
         });
 
     } catch (error) {
+
         res.status(500).json({
             success: false,
             message: error.message
         });
+
     }
+
 };

@@ -8,7 +8,7 @@ const foodSchema = new mongoose.Schema(
             ref: "User"
         },
 
-        name: String,
+        foodName: String,
 
         calories: Number,
 

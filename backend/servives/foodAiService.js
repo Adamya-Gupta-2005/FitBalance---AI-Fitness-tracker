@@ -1,9 +1,6 @@
 import model from "../config/gemini.js";
 
-export const analyzeFoodImage = async (
-    imageBuffer,
-    mimeType
-) => {
+export const analyzeFoodImage = async (imageBuffer, mimeType) => {
 
     const imagePart = {
         inlineData: {
@@ -13,31 +10,44 @@ export const analyzeFoodImage = async (
     };
 
     const prompt = `
-    Analyze the food image.
-    
-    Return ONLY valid JSON.
-    
-    {
-      "foodName": "",   
-      "calories": 0,
-      "mealType": ""
-    }
-    
-    mealType must be one of:
-    breakfast
-    lunch
-    snack
-    dinner
-    `;
+        Analyze this food image.
 
-    const result = await model.generateContent([
-            prompt,
-            imagePart
-        ]);
+        Estimate calories for ONE serving.
 
+        Return ONLY valid JSON.
 
-    const response = result.response.text();
-    const cleaned = response.replace(/```json/g, "").replace(/```/g, "").trim();
+        {
+            "foodName":"",
+            "calories":0
+        }
+
+        Rules:
+        - foodName must be generic.
+        - Maximum TWO words.
+        - Examples:
+        Pizza
+        Burger
+        French Fries
+        Fried Rice
+        Chicken Curry
+        Apple
+        Banana
+        Noodles
+        Sandwich
+
+        No explanation.
+        No markdown.
+        Only JSON.
+        `;
+
+    const result = await model.generateContent([prompt, imagePart]);
+
+    const text = result.response.text();
+
+    const cleaned = text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
 
     return JSON.parse(cleaned);
 };

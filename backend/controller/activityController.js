@@ -1,68 +1,193 @@
-import Activity from '../models/activityModel.js';
+import Activity from "../models/activityModel.js";
+import WeeklyStats from "../models/WeeklyStats.js";
 
-export const addActivity = async (req,res) => {
-    const {name, duration, caloriesBurned, activityType} = req.body;
+export const addActivity = async (req, res) => {
 
-    const activity = await Activity.create({
-        user: req.user._id,
-        name,
-        duration,
-        caloriesBurned,
-        activityType
-    });
+    try {
 
-    res.status(200).json({
-        success: true,
-        activity
-    });
-};
+        const {
+            name,
+            duration,
+            caloriesBurned,
+            activityType
+        } = req.body;
 
+        const activity = await Activity.create({
+            user: req.user._id,
+            name,
+            duration,
+            caloriesBurned,
+            activityType
+        });
 
-export const getActivities = async (req,res) => {
-    const activities = await Activity.find({
-        user: req.user._id
-    }).sort({ createdAt: -1 });
+        const day = new Date().toLocaleDateString("en-US", {
+            weekday: "short"
+        });
 
-    res.status(200).json({
-        success: true,
-        activities
-    });
-};
+        let stats = await WeeklyStats.findOne({
+            user: req.user._id,
+            day
+        });
 
-export const deleteActivity = async (req,res) => {
-    await Activity.findByIdAndDelete(req.params.id);
+        if (!stats) {
 
-    res.status(200).json({
-        success: true
-    });
-};
+            stats = await WeeklyStats.create({
+                user: req.user._id,
+                day,
+                intake: 0,
+                burn: caloriesBurned
+            });
 
-export const getActivityDashboard = async (req,res) => {
-    
-    const startOfDay = new Date();
-    startOfDay.setHours(0,0,0,0);
+        } else {
 
-    const activities = await Activity.find({
-        user: req.user._id,
-        createdAt: {
-            $gte: startOfDay
+            stats.burn += caloriesBurned;
+            await stats.save();
+
         }
-    });
 
-    const totalBurned = activities.reduce(
-        (sum,activity) => sum + activity.caloriesBurned, 0
-    );
+        res.status(200).json({
+            success: true,
+            activity
+        });
 
-    const totalMinutes = activities.reduce(
-        (sum,activity) => sum + activity.duration,0
-    );
+    } catch (error) {
 
-    const workoutsLogged = activities.length;
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
 
-    res.status(200).json({
-        success: true,
-        totalBurned,
-        totalMinutes,
-        workoutsLogged
-    });
+    }
+
+};
+
+export const getActivities = async (req, res) => {
+
+    try {
+
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        await Activity.deleteMany({
+            user: req.user._id,
+            createdAt: {
+                $lt: startOfDay
+            }
+        });
+
+        const activities = await Activity.find({
+            user: req.user._id,
+            createdAt: {
+                $gte: startOfDay
+            }
+        }).sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            activities
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
+export const deleteActivity = async (req, res) => {
+
+    try {
+
+        const activity = await Activity.findById(req.params.id);
+
+        if (!activity) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Activity not found"
+            });
+
+        }
+
+        const day = activity.createdAt.toLocaleDateString("en-US", {
+            weekday: "short"
+        });
+
+        const stats = await WeeklyStats.findOne({
+            user: req.user._id,
+            day
+        });
+
+        if (stats) {
+
+            stats.burn -= activity.caloriesBurned;
+
+            if (stats.burn < 0)
+                stats.burn = 0;
+
+            await stats.save();
+
+        }
+
+        await Activity.findByIdAndDelete(req.params.id);
+
+        res.json({
+            success: true
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
+export const getActivityDashboard = async (req, res) => {
+
+    try {
+
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const activities = await Activity.find({
+            user: req.user._id,
+            createdAt: {
+                $gte: startOfDay
+            }
+        });
+
+        const totalBurned = activities.reduce(
+            (sum, a) => sum + a.caloriesBurned,
+            0
+        );
+
+        const totalMinutes = activities.reduce(
+            (sum, a) => sum + a.duration,
+            0
+        );
+
+        res.json({
+            success: true,
+            totalBurned,
+            totalMinutes,
+            workoutsLogged: activities.length
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
 };
