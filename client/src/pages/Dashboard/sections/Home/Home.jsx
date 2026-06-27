@@ -23,7 +23,8 @@ import {
 const Home = () => {
 
   const [user, setUser] = useState(null);
-  const backendUrl = "http://localhost:5000";
+  const backendUrl =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";;
 
   const [stats, setStats] = useState({
     totalCalories: 0,

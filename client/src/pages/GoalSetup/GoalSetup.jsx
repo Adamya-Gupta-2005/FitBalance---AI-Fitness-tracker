@@ -18,7 +18,8 @@ const GoalSetup = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
 
-    const backendUrl = "http://localhost:5000"
+    const backendUrl =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
     const [goalData, setGoalData] = useState({
         age: "",
