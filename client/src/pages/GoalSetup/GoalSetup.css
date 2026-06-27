@@ -171,8 +171,8 @@
     .goal-continue-btn {
         position: fixed;
         bottom: 20px;
-        width: 80%;
-        left: 10%;
+        width: 90%;
+        margin: 10px;
         text-align: center;
         z-index: 10;
         align-self: center;
