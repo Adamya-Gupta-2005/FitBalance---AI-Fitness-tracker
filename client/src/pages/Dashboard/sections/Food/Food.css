@@ -159,17 +159,22 @@ body {
     margin-left: 5px;
 }
 
-.loading-screen{
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
     height: 100vh;
-    margin-left: 240px;
-    background-color: #636363;
+    background-color: #222222; 
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    z-index: 10000;
 }
 
-.loader{
+.loader {
     width: 40px;
     height: 40px;
     border: 5px solid gray;
@@ -178,6 +183,7 @@ body {
     animation: spin 1s linear infinite;
     margin-bottom: 20px;
 }
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -187,6 +193,7 @@ body {
     }
 }
 
+/* --- MEDIA QUERY FOR MOBILE STYLES --- */
 @media screen and (max-width: 768px) {
     .food-container {
         margin-left: 0;
@@ -223,5 +230,19 @@ body {
     .food-item {
         padding: 12px;
         gap: 10px;
+    }
+
+    .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #222222;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 10000;
     }
 }

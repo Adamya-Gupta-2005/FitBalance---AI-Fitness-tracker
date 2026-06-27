@@ -206,6 +206,8 @@ const Food = () => {
                 mealType:getMealType()
             });
 
+            setSelectedFile(null);
+
             setActivePannel("add");
 
             toast.success("Food identified");
