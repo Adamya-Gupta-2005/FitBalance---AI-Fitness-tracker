@@ -19,7 +19,7 @@ const GoalSetup = () => {
     const [step, setStep] = useState(1);
 
     const backendUrl =
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
     const [goalData, setGoalData] = useState({
         age: "",
@@ -31,39 +31,43 @@ const GoalSetup = () => {
     });
 
     const selectGoal = (goal) => {
-        if (goal === 'lose') {
-            setGoalData({
-                ...goalData,
-                goal,
-                dailyCalorieIntake: 1800,
-                dailyCalorieBurn: 400,
-            })
-        }
+        setGoalData((prev) => {
+            if (goal === "lose") {
+                return {
+                    ...prev,
+                    goal,
+                    dailyCalorieIntake: 1800,
+                    dailyCalorieBurn: 400,
+                };
+            }
 
-        if (goal === "maintain") {
-            setGoalData({
-                ...goalData,
-                goal,
-                dailyCalorieIntake: 2200,
-                dailyCalorieBurn: 300,
-            });
-        }
+            if (goal === "maintain") {
+                return {
+                    ...prev,
+                    goal,
+                    dailyCalorieIntake: 2200,
+                    dailyCalorieBurn: 300,
+                };
+            }
 
-        if (goal === "gain") {
-            setGoalData({
-                ...goalData,
-                goal,
-                dailyCalorieIntake: 2800,
-                dailyCalorieBurn: 200,
-            });
-        };
-    }
+            if (goal === "gain") {
+                return {
+                    ...prev,
+                    goal,
+                    dailyCalorieIntake: 2800,
+                    dailyCalorieBurn: 200,
+                };
+            }
+
+            return prev;
+        });
+    };
 
 
     const handleFinish = async () => {
         if (
-            !goalData.age || !goalData.weight ||
-            !goalData.height || !goalData.goal
+            !goalData.age === "" || !goalData.weight === "" ||
+            !goalData.height === "" || !goalData.goal
         ) {
             toast.error("Complete all fields");
             return;
