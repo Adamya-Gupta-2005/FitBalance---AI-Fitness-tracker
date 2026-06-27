@@ -13,6 +13,8 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 
 dotenv.config();
 
+const PORT = process.env.PORT || 5000;
+
 const app = express();
 connectDB();
 
@@ -34,6 +36,6 @@ app.use('/api/food', foodRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server running on ${process.env.PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
 })
