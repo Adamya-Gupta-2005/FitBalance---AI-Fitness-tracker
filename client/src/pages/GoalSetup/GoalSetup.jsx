@@ -32,42 +32,35 @@ const GoalSetup = () => {
 
     const selectGoal = (goal) => {
         setGoalData((prev) => {
+            const updated = {
+                ...prev,
+                goal,
+            };
+
             if (goal === "lose") {
-                return {
-                    ...prev,
-                    goal,
-                    dailyCalorieIntake: 1800,
-                    dailyCalorieBurn: 400,
-                };
+                updated.dailyCalorieIntake = 1800;
+                updated.dailyCalorieBurn = 400;
             }
 
             if (goal === "maintain") {
-                return {
-                    ...prev,
-                    goal,
-                    dailyCalorieIntake: 2200,
-                    dailyCalorieBurn: 300,
-                };
+                updated.dailyCalorieIntake = 2200;
+                updated.dailyCalorieBurn = 300;
             }
 
             if (goal === "gain") {
-                return {
-                    ...prev,
-                    goal,
-                    dailyCalorieIntake: 2800,
-                    dailyCalorieBurn: 200,
-                };
+                updated.dailyCalorieIntake = 2800;
+                updated.dailyCalorieBurn = 200;
             }
 
-            return prev;
+            return updated;
         });
     };
 
 
     const handleFinish = async () => {
         if (
-            !goalData.age === "" || !goalData.weight === "" ||
-            !goalData.height === "" || !goalData.goal
+            !goalData.age || !goalData.weight ||
+            !goalData.height || !goalData.goal
         ) {
             toast.error("Complete all fields");
             return;
@@ -81,6 +74,7 @@ const GoalSetup = () => {
                     age: Number(goalData.age),
                     weight: Number(goalData.weight),
                     height: Number(goalData.height),
+                    goal: goalData.goal,
                     dailyCalorieIntake: Number(goalData.dailyCalorieIntake),
                     dailyCalorieBurn: Number(goalData.dailyCalorieBurn)
                 },

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import './loader.css'
 
 const ProtectedRoute = ({children}) => {
     
@@ -31,7 +32,7 @@ const ProtectedRoute = ({children}) => {
     }, []);
 
     if (isAuthenticated === null) {
-        return <h2>Loading...</h2>;
+        return <div className="loader"><h2>Loading...</h2></div>;
     }
 
     return isAuthenticated ? children : <Navigate to="/" />

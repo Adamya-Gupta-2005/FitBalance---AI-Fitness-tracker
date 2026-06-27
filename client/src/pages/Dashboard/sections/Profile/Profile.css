@@ -124,8 +124,10 @@ body {
 .logout-btn {
     width: 100%;
     margin-top: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 12px;
+    margin-left: 5px;
+    margin-right: 5px;
     border: none;
     border-radius: 12px;
     background-color: #d64545;
