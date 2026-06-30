@@ -9,16 +9,13 @@ export const resetWeekIfNeeded = async (userId) => {
 
     const today = new Date();
 
-    // Monday = 1
-    const isMonday = today.getDay() === 1;
+    const lastReset = user.lastWeekReset ? new Date(user.lastWeekReset) : null;
 
-    const lastReset = new Date(user.lastWeekReset);
-
-    const sameWeek =
-        lastReset.getFullYear() === today.getFullYear() &&
-        getWeekNumber(lastReset) === getWeekNumber(today);
-
-    if (isMonday && !sameWeek) {
+    if (
+        !lastReset ||
+        getWeekNumber(lastReset) !== getWeekNumber(today) ||
+        lastReset.getFullYear() !== today.getFullYear()
+    ) {
 
         await WeeklyStats.deleteMany({
             user: userId
@@ -33,7 +30,22 @@ export const resetWeekIfNeeded = async (userId) => {
 
 function getWeekNumber(date) {
 
-    const firstJan = new Date(date.getFullYear(), 0, 1);
+    const d = new Date(date);
 
-    return Math.ceil((((date - firstJan) / 86400000) + firstJan.getDay() + 1) / 7);
+    d.setHours(0,0,0,0);
+
+    d.setDate(
+        d.getDate() + 4 - (d.getDay() || 7)
+    );
+
+    const yearStart = new Date(
+        d.getFullYear(),
+        0,
+        1
+    );
+
+    return Math.ceil(
+        (((d - yearStart) / 86400000) + 1) / 7
+    );
+
 }

@@ -1,9 +1,12 @@
 import Food from "../models/foodModel.js";
 import WeeklyStats from "../models/WeeklyStats.js";
 import { analyzeFoodImage } from "../servives/foodAiService.js";
+import { resetWeekIfNeeded } from "../utils/weekReset.js";
 
 export const addFood = async (req, res) => {
     try {
+
+        await resetWeekIfNeeded(req.user._id);
 
         const { foodName, calories, mealType } = req.body;
 
@@ -91,6 +94,8 @@ export const deleteFood = async (req, res) => {
 
     try {
 
+        await resetWeekIfNeeded(req.user._id);
+
         const food = await Food.findById(req.params.id);
 
         if (!food) {
@@ -103,8 +108,9 @@ export const deleteFood = async (req, res) => {
         }
 
         const day = food.createdAt.toLocaleDateString("en-US", {
-            weekday: "short"
-        });
+            weekday: "short",
+            timeZone: "Asia/Kolkata"
+        }).format(new Date());
 
         const stats = await WeeklyStats.findOne({
             user: req.user._id,

@@ -1,9 +1,11 @@
 import Activity from "../models/activityModel.js";
 import WeeklyStats from "../models/WeeklyStats.js";
+import { resetWeekIfNeeded } from "../utils/weekReset.js";
 
 export const addActivity = async (req, res) => {
 
     try {
+        await resetWeekIfNeeded(req.user._id);
 
         const {
             name,
@@ -101,6 +103,7 @@ export const getActivities = async (req, res) => {
 export const deleteActivity = async (req, res) => {
 
     try {
+        await resetWeekIfNeeded(req.user._id);
 
         const activity = await Activity.findById(req.params.id);
 
@@ -114,8 +117,9 @@ export const deleteActivity = async (req, res) => {
         }
 
         const day = activity.createdAt.toLocaleDateString("en-US", {
-            weekday: "short"
-        });
+            weekday: "short",
+            timeZone: "Asia/Kolkata"
+        }).format(new Date());
 
         const stats = await WeeklyStats.findOne({
             user: req.user._id,

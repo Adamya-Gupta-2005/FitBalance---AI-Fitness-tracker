@@ -28,4 +28,10 @@ const weeklyStatsSchema = new mongoose.Schema(
   }
 );
 
+// One record per user per day makes sure only one entry per day removes dublicate data
+weeklyStatsSchema.index(
+  { user: 1, day: 1 },
+  { unique: true }
+);
+
 export default mongoose.model("WeeklyStats", weeklyStatsSchema);
