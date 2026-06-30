@@ -22,9 +22,10 @@ export const addActivity = async (req, res) => {
             activityType
         });
 
-        const day = new Date().toLocaleDateString("en-US", {
-            weekday: "short"
-        });
+        const day = new Intl.DateTimeFormat("en-US", {
+            weekday: "short",
+            timeZone: "Asia/Kolkata"
+        }).format(activity.createdAt);
 
         let stats = await WeeklyStats.findOne({
             user: req.user._id,
@@ -116,10 +117,10 @@ export const deleteActivity = async (req, res) => {
 
         }
 
-        const day = activity.createdAt.toLocaleDateString("en-US", {
+        const day = new Intl.DateTimeFormat("en-US", {
             weekday: "short",
             timeZone: "Asia/Kolkata"
-        }).format(new Date());
+        }).format(activity.createdAt);
 
         const stats = await WeeklyStats.findOne({
             user: req.user._id,

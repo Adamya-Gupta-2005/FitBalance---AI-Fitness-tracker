@@ -17,9 +17,10 @@ export const addFood = async (req, res) => {
             mealType
         });
 
-        const day = new Date().toLocaleDateString("en-US", {
-            weekday: "short"
-        });
+        const day = new Intl.DateTimeFormat("en-US", {
+            weekday: "short",
+            timeZone: "Asia/Kolkata"
+        }).format(new Date());
 
         let stats = await WeeklyStats.findOne({
             user: req.user._id,
@@ -107,10 +108,10 @@ export const deleteFood = async (req, res) => {
 
         }
 
-        const day = food.createdAt.toLocaleDateString("en-US", {
+        const day = new Intl.DateTimeFormat("en-US", {
             weekday: "short",
             timeZone: "Asia/Kolkata"
-        }).format(new Date());
+        }).format(food.createdAt);
 
         const stats = await WeeklyStats.findOne({
             user: req.user._id,
